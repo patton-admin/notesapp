@@ -1,72 +1,80 @@
-import { useState, useEffect } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg';
+import {ThemeProvider, createTheme, CssBaseline} from '@mui/material';
+import {useState, useEffect} from 'react';
 import './App.css';
 import DataGridComponent from "./DataGridComponent.jsx";
+import Footer from "./Footer.jsx";
+import {getAllCandidates} from "./api/api.jsx";
 
+const theme = createTheme({
+    palette: {
+        background: {
+            default: '#181717'
+        }
+    }
+});
 
-function App() {
-  const [count, setCount] = useState(0)
-  const [apiData, setApiData] = useState(null) // State to store API data
-  const [loading, setLoading] = useState(true) // State to handle loading
+const App = () => {
+    const [state, setState] = useState({
+        loading: true,
+        apiData: null,
+        recruiter: []
+    });
 
-  useEffect(() => {
-    // Replace with your API URL
-    const apiUrl = 'https://dssfrodna1.execute-api.us-east-1.amazonaws.com/test/v1-test'
+    useEffect(() => {
+        const apiUrl = 'https://dssfrodna1.execute-api.us-east-1.amazonaws.com/test/v1-test';
 
-    // Fetch data from the API
-    fetch(apiUrl)
-      .then((response) => response.json())
-      .then((data) => {
-        setApiData(data[0]) // Store the data in state
-        setLoading(false) // Set loading to false
-      })
-      .catch((error) => {
-        console.error('Error fetching data:', error)
-        setLoading(false) // Set loading to false even on error
-      })
-  }, []) // Empty dependency array ensures this runs once when the component mounts
+        const fetchData = async () => {
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+                setState(prev => ({...prev, apiData: data[0], loading: false}));
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                setState(prev => ({...prev, loading: false}));
+            }
+        };
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+        fetchData();
+    }, []);
 
-      {/* Display API data */}
-      <div className="api-data">
-        {loading ? (
-          <p>Loading...</p>
-        ) : apiData ? (
-          <div>
-            <h2>API Data:</h2>
-            <p><strong>Title:</strong> {apiData.user_createdby}</p>
-            <p><strong>Body:</strong> {apiData.user_loginid}</p>
-          </div>
-        ) : (
-          <p>Error loading data.</p>
-        )}
-          <DataGridComponent />
-      </div>
-    </>
-  )
+    useEffect(() => {
+        const fetchRecruitersInfo = async () => {
+            try {
+                const getRecruitersInfo = await getAllCandidates();
+                if (getRecruitersInfo?.status === 200) {
+                    const {data} = getRecruitersInfo.data;
+                    setState(prev => ({
+                        ...prev,
+                        recruiter: data.map((e, index) => ({...e, id: index + 1}))
+                    }));
+                }
+            } catch (error) {
+                console.error("Error fetching recruiters info:", error);
+            }
+        };
+
+        fetchRecruitersInfo();
+    }, []);
+
+    return (
+        <ThemeProvider theme={theme}>
+            <div className="api-data">
+                {state.loading ? (
+                    <p>Loading...</p>
+                ) : state.apiData ? (
+                    <div style={{backgroundColor: '#1565c0'}}>
+                        <h2>Patton Score Card</h2>
+                        <p><strong>UserId:</strong> {state.apiData.user_createdby}</p>
+                        <p><strong>Email:</strong> {state.apiData.user_loginid}</p>
+                    </div>
+                ) : (
+                    <p>Error loading data.</p>
+                )}
+                {state.recruiter.length > 0 && <DataGridComponent recruiter={state.recruiter}/>}
+                {/*<Footer/>*/}
+            </div>
+        </ThemeProvider>
+    );
 }
 
 export default App
