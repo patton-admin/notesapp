@@ -1,5 +1,5 @@
-import {DataGrid} from '@mui/x-data-grid'
-import {ThemeProvider, createTheme, Button, Stack} from '@mui/material'
+import {DataGrid, GridToolbar} from '@mui/x-data-grid'
+import {ThemeProvider, createTheme, Button, Stack, Box} from '@mui/material'
 import {useEffect, useState} from 'react';
 import {CircularProgress} from '@mui/material';
 
@@ -13,14 +13,14 @@ const theme = createTheme({
 });
 
 const columns = [
-    { field: 'id', headerName: 'Row', width: 10, headerClassName: 'header-bold' },
-    { field: 'recruiterName', headerName: 'Recruiter Name', width: 100, headerClassName: 'header-bold' },
-    { field: 'team', headerName: 'Team', width: 100, headerClassName: 'header-bold' },
-    { field: 'achievedInterviews', headerName: 'Achieved Interviews', width: 100, headerClassName: 'header-bold' },
-    { field: 'expectedInterviews', headerName: 'Expected Interviews', width: 100, headerClassName: 'header-bold' },
-    { field: 'lead', headerName: 'Lead', width: 20, headerClassName: 'header-bold' },
-    { field: 'comments', headerName: 'Comments', width: 200, headerClassName: 'header-bold' },
-    { field: 'timestamp', headerName: 'Timestamp', width: 100, headerClassName: 'header-bold' },
+    {field: 'id', headerName: 'Row', width: 10, headerClassName: 'header-bold'},
+    {field: 'recruiterName', headerName: 'Recruiter Name', width: 100, headerClassName: 'header-bold'},
+    {field: 'team', headerName: 'Team', width: 100, headerClassName: 'header-bold'},
+    {field: 'achievedInterviews', headerName: 'Achieved Interviews', width: 100, headerClassName: 'header-bold'},
+    {field: 'expectedInterviews', headerName: 'Expected Interviews', width: 100, headerClassName: 'header-bold'},
+    {field: 'lead', headerName: 'Lead', width: 20, headerClassName: 'header-bold'},
+    {field: 'comments', headerName: 'Comments', width: 200, headerClassName: 'header-bold'},
+    {field: 'timestamp', headerName: 'Timestamp', width: 100, headerClassName: 'header-bold'},
 ];
 
 const DataGridComponent = ({recruiter}) => {
@@ -61,56 +61,76 @@ const DataGridComponent = ({recruiter}) => {
 
     return (
         <ThemeProvider theme={theme}>
-            <Stack spacing={2} sx={{width: '100%', p: 2}}>
-                <Stack direction="row" spacing={2}>
-                    <Button
-                        variant="contained"
-                        onClick={handleAddRow}
-                        sx={{bgcolor: 'primary.main'}}
-                    >
-                        Add Row
-                    </Button>
-                    <Button
-                        variant="contained"
-                        onClick={handleDeleteRows}
-                        disabled={selectedRows.length === 0}
-                        sx={{bgcolor: 'error.main'}}
-                    >
-                        Delete Selected
-                    </Button>
+            <Box sx={{
+                height: 'calc(100vh - 200px)',
+                width: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                padding: 2
+            }}>
+                <Stack spacing={2} sx={{width: '100%', p: 2}}>
+                    <Stack direction="row" spacing={2}>
+                        <Button
+                            variant="contained"
+                            onClick={handleAddRow}
+                            sx={{bgcolor: 'primary.main'}}
+                        >
+                            Add Score Card
+                        </Button>
+                        <Button
+                            variant="contained"
+                            onClick={handleDeleteRows}
+                            disabled={selectedRows.length === 0}
+                            sx={{bgcolor: 'error.main'}}
+                        >
+                            Delete Selected Score Card
+                        </Button>
+                    </Stack>
+
+                    {isModalOpen && (
+                        <div className="modal">
+                            <AddRowModal
+                                isOpen={isModalOpen}
+                                formData={formData}
+                                setFormData={setFormData}
+                                onSubmit={handleFormSubmit}
+                                onClose={() => setIsModalOpen(false)}
+                            />
+                        </div>
+                    )}
+
+                    <Box sx={{ flexGrow: 1, width: '100%' }}>
+                        {isLoading ? <p>Loading...</p> : (
+                            <DataGrid
+                                rows={rows}
+                                columns={columns}
+                                autoHeight
+                                pageSizeOptions={[5, 10, 25]}
+                                initialState={{
+                                    pagination: {paginationModel: {pageSize: 10}},
+                                }}
+                                checkboxSelection
+                                onRowSelectionModelChange={(newSelection) => {
+                                    setSelectedRows(newSelection)
+                                }}
+                                disableRowSelectionOnClick
+                                sx={{
+                                    '& .MuiDataGrid-root': {
+                                        border: 'none',
+                                    },
+                                    '& .MuiDataGrid-cell': {
+                                        borderBottom: 1
+                                    },
+                                    '& .MuiDataGrid-columnHeaders': {
+                                        backgroundColor: '#1565c0',
+                                        color: '#fff'
+                                    }
+                                }}
+                            />
+                        )}
+                    </Box>
                 </Stack>
-
-                {isModalOpen && (
-                    <div className="modal">
-                        <AddRowModal
-                            isOpen={isModalOpen}
-                            formData={formData}
-                            setFormData={setFormData}
-                            onSubmit={handleFormSubmit}
-                            onClose={() => setIsModalOpen(false)}
-                        />
-                    </div>
-                )}
-
-
-                {isLoading ? <CircularProgress sx={{margin: 'center'}}/> : (
-                    <DataGrid
-                        rows={rows}
-                        columns={columns}
-                        autoHeight
-                        pageSizeOptions={[5, 10, 25]}
-                        initialState={{
-                            pagination: {paginationModel: {pageSize: 10}},
-                        }}
-                        checkboxSelection
-                        onRowSelectionModelChange={(newSelection) => {
-                            setSelectedRows(newSelection)
-                        }}
-                        disableRowSelectionOnClick
-                    />
-                )}
-
-            </Stack>
+            </Box>
         </ThemeProvider>
     )
 }

@@ -70,7 +70,12 @@ const App = () => {
                 ) : (
                     <p>Error loading data.</p>
                 )}
-                {state.recruiter.length > 0 && <DataGridComponent recruiter={state.recruiter}/>}
+
+                {state.recruiter.length > 0 &&
+                    <div>
+                        <DataGridComponent recruiter={state.recruiter}/>
+                    </div>
+                    }
                 {/*<Footer/>*/}
             </div>
         </ThemeProvider>
