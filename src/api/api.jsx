@@ -11,7 +11,6 @@ export const getAllCandidates = (options) => {
         })
         .then((response) => {
             const { status, data } = response;
-            console.log("response...", data);
             return { status, data: data.body};
         })
         .catch(function (error) {

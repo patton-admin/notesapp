@@ -1,9 +1,12 @@
-import {ThemeProvider, createTheme, CssBaseline} from '@mui/material';
-import {useState, useEffect} from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import {ThemeProvider, createTheme, CssBaseline, CircularProgress} from '@mui/material';
+import { useState, useEffect } from 'react';
 import './App.css';
 import DataGridComponent from "./DataGridComponent.jsx";
 import Footer from "./Footer.jsx";
-import {getAllCandidates} from "./api/api.jsx";
+import { getAllCandidates } from "./api/api.jsx";
+import Header from "./Header.jsx";
+import {ScoreCardPage} from "./ScoreCard.jsx";
 
 const theme = createTheme({
     palette: {
@@ -19,6 +22,11 @@ const App = () => {
         apiData: null,
         recruiter: []
     });
+
+    const handleLogout = () => {
+        // Add your logout logic here
+        console.log('Logging out...');
+    };
 
     useEffect(() => {
         const apiUrl = 'https://dssfrodna1.execute-api.us-east-1.amazonaws.com/test/v1-test';
@@ -58,28 +66,31 @@ const App = () => {
 
     return (
         <ThemeProvider theme={theme}>
-            <div className="api-data">
-                {state.loading ? (
-                    <p>Loading...</p>
-                ) : state.apiData ? (
-                    <div style={{backgroundColor: '#1565c0'}}>
-                        <h2>Patton Score Card</h2>
-                        <p><strong>UserId:</strong> {state.apiData.user_createdby}</p>
-                        <p><strong>Email:</strong> {state.apiData.user_loginid}</p>
-                    </div>
-                ) : (
-                    <p>Error loading data.</p>
-                )}
-
-                {state.recruiter.length > 0 &&
-                    <div>
-                        <DataGridComponent recruiter={state.recruiter}/>
-                    </div>
-                    }
-                {/*<Footer/>*/}
-            </div>
+            <BrowserRouter>
+                <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+                    <Header
+                        user={state.apiData?.user_loginid}
+                        handleLogout={handleLogout}
+                    />
+                    <main style={{ flex: 1, padding: '20px' }}>
+                        <Routes>
+                            <Route path="/" element={<Navigate to="/scorecard" />} />
+                            <Route path="/home" element={<div>Home Page</div>} />
+                            <Route path="/scorecard" element={<ScoreCardPage state={state} />} />
+                            <Route path="/dashboard" element={<div>Dashboard Page</div>} />
+                            <Route path="/jobOrders" element={<div>Job Orders Page</div>} />
+                            <Route path="/globalBucket" element={<div>Score Card Page</div>} />
+                            <Route path="/support" element={<div>Support Page</div>} />
+                            <Route path="/help" element={<div>Help Page</div>} />
+                            <Route path="/user" element={<div>User Profile Page</div>} />
+                            <Route path="*" element={<Navigate to="/scorecard" />} />
+                        </Routes>
+                    </main>
+                    {Footer && <Footer />}
+                </div>
+            </BrowserRouter>
         </ThemeProvider>
     );
 }
 
-export default App
+export default App;

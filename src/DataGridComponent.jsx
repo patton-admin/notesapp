@@ -100,7 +100,7 @@ const DataGridComponent = ({recruiter}) => {
                     )}
 
                     <Box sx={{ flexGrow: 1, width: '100%' }}>
-                        {isLoading ? <p>Loading...</p> : (
+                        {isLoading ? <CircularProgress /> : (
                             <DataGrid
                                 rows={rows}
                                 columns={columns}
