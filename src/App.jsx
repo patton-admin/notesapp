@@ -2,10 +2,9 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import {ThemeProvider, createTheme, CssBaseline, CircularProgress} from '@mui/material';
 import { useState, useEffect } from 'react';
 import './App.css';
-import DataGridComponent from "./DataGridComponent.jsx";
-import Footer from "./Footer.jsx";
+import Footer from "./components/Footer.jsx";
 import { getAllCandidates } from "./api/api.jsx";
-import Header from "./Header.jsx";
+import Header from "./components/Header.jsx";
 import {ScoreCardPage} from "./ScoreCard.jsx";
 
 const theme = createTheme({

@@ -1,16 +1,16 @@
 import React from 'react';
-// import styles from './styles/AddRowModel.css';
+import styles from './styles/AddRowModel.module.css';
 import {Box, Modal} from "@mui/material";
 
-// const style = {
-//     position: 'absolute',
-//     top: '50%',
-//     left: '50%',
-//     transform: 'translate(-50%, -50%)',
-//     bgcolor: 'background.paper',
-//     boxShadow: 24,
-//     p: 4,
-// };
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    bgcolor: 'background.paper',
+    boxShadow: 24,
+    p: 4,
+};
 
 const AddRowModal = ({ isOpen, formData, setFormData, onSubmit, onClose }) => {
     if (!isOpen) return null;

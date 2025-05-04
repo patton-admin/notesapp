@@ -47,7 +47,7 @@ const Header = ({ user, handleLogout }) => (
                 })}
             >
                 <FontAwesomeIcon icon="lightbulb" color="#15b5ea" />
-                <span style={{ margin: "0 0.5rem" }}>Patton Tracking System</span>
+                <span style={{ margin: "0 0.5rem" }}>Patton Score Card</span>
                 <FontAwesomeIcon icon="lightbulb" color="#15b5ea" />
             </NavLink>
 
