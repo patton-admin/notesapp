@@ -6,6 +6,7 @@ import Footer from "./components/Footer.jsx";
 import { getAllCandidates } from "./api/api.jsx";
 import Header from "./components/Header.jsx";
 import {ScoreCardPage} from "./ScoreCard.jsx";
+import Login from "./components/login/Login.jsx";
 
 const theme = createTheme({
     palette: {
@@ -73,6 +74,7 @@ const App = () => {
                     />
                     <main style={{ flex: 1, padding: '20px' }}>
                         <Routes>
+                            <Route path="/login" element={<Login />} />
                             <Route path="/" element={<Navigate to="/scorecard" />} />
                             <Route path="/home" element={<div>Home Page</div>} />
                             <Route path="/scorecard" element={<ScoreCardPage state={state} />} />
