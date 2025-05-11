@@ -1,6 +1,7 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 import { userLogin, userLoginError, userLoginSuccess } from "../actions/login";
 import { history } from "../routers/AppRouters.jsx";
+import {jwtDecode} from "jwt-decode";
 
 import {
   setUpAxiosInterceptors,
@@ -27,22 +28,22 @@ export function* loginActionEffect(loginAction) {
     let { status } = data;
 
     if (status === 200) {
-      // let { jwtToken } = data.data;
-      // let decodedToken = decodeJSON(jwtToken);
-      // if (decodedToken) {
-      //   let { sub, id, firstName, lastName, role } = decodedToken;
-      //   data.token = jwtToken;
-      //   data.userId = sub;
-      //   data.id = id;
-      //   data.firstName = firstName;
-      //   data.lastName = lastName;
-      //   data.loginSuccess = true;
-      //   data.role = role;
-      // }
-      yield put(userLoginSuccess({}));
+      let { jwtToken } = data.data;
+      let decodedToken = decodeJSON(jwtToken);
+      if (decodedToken) {
+        let { sub, id, firstName, lastName, role } = decodedToken;
+        data.token = jwtToken;
+        data.userId = sub;
+        data.id = id;
+        data.firstName = firstName;
+        data.lastName = lastName;
+        data.loginSuccess = true;
+        data.role = role;
+      }
+      yield put(userLoginSuccess(data));
       setUpAxiosInterceptors({});
       setUpAxiosInterceptorsResponse();
-      history.push("/home");
+      history.push("/scoreCard");
     }
   } catch (e) {
     history.push("/");

@@ -15,7 +15,7 @@ import {
     UPDATE_USER_FAILURE,
     DELETE_USER,
     DELETE_USER_SUCCESS,
-    DELETE_USER_FAILURE,
+    DELETE_USER_FAILURE, LOGOUT_REQUEST,
 } from "./../actions/action";
 
 /***
@@ -148,6 +148,10 @@ export const loginReducer = (state = initialLoginValue, action) => {
                 loginSuccess: false,
                 role: "",
                 error: true,
+            };
+        case LOGOUT_REQUEST:
+            return {
+                ...initialLoginValue,
             };
         default:
             return state;

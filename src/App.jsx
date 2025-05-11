@@ -7,6 +7,8 @@ import { getAllCandidates } from "./api/api.jsx";
 import Header from "./components/Header.jsx";
 import {ScoreCardPage} from "./ScoreCard.jsx";
 import Login from "./components/login/Login.jsx";
+import {useSelector} from "react-redux";
+import {userLogout} from "./actions/login.js";
 
 const theme = createTheme({
     palette: {
@@ -17,14 +19,16 @@ const theme = createTheme({
 });
 
 const App = () => {
+    const isLoggedIn = useSelector((state) => state.login.role);
     const [state, setState] = useState({
         loading: true,
         apiData: null,
-        recruiter: []
+        recruiter: [],
+        isLoggedIn: false,
     });
 
     const handleLogout = () => {
-        // Add your logout logic here
+        props.dispatch(userLogout());
         console.log('Logging out...');
     };
 
@@ -64,30 +68,36 @@ const App = () => {
         fetchRecruitersInfo();
     }, []);
 
+    useEffect(() => {
+        setState(prev => ({ ...prev, isLoggedIn: !!isLoggedIn }));
+    }, [isLoggedIn]);
+
     return (
         <ThemeProvider theme={theme}>
             <BrowserRouter>
                 <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-                    <Header
-                        user={state.apiData?.user_loginid}
-                        handleLogout={handleLogout}
-                    />
-                    <main style={{ flex: 1, padding: '20px' }}>
+                    {state.isLoggedIn ? (
+                        <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+                            <Header user={state.apiData.user_loginid} handleLogout={handleLogout} />
+                            <main style={{ flex: 1, padding: '20px' }}>
+                                <Routes>
+                                    <Route path="/scorecard" element={<ScoreCardPage state={state} />} />
+                                    <Route path="/dashboard" element={<div>Dashboard Page</div>} />
+                                    <Route path="/jobOrders" element={<div>Job Orders Page</div>} />
+                                    <Route path="/globalBucket" element={<div>Score Card Page</div>} />
+                                    <Route path="/support" element={<div>Support Page</div>} />
+                                    <Route path="/help" element={<div>Help Page</div>} />
+                                    <Route path="/user" element={<div>User Profile Page</div>} />
+                                    <Route path="*" element={<Navigate to="/scorecard" />} />
+                                </Routes>
+                            </main>
+                            <Footer />
+                        </div>
+                    ) : (
                         <Routes>
-                            <Route path="/login" element={<Login />} />
-                            <Route path="/" element={<Navigate to="/scorecard" />} />
-                            <Route path="/home" element={<div>Home Page</div>} />
-                            <Route path="/scorecard" element={<ScoreCardPage state={state} />} />
-                            <Route path="/dashboard" element={<div>Dashboard Page</div>} />
-                            <Route path="/jobOrders" element={<div>Job Orders Page</div>} />
-                            <Route path="/globalBucket" element={<div>Score Card Page</div>} />
-                            <Route path="/support" element={<div>Support Page</div>} />
-                            <Route path="/help" element={<div>Help Page</div>} />
-                            <Route path="/user" element={<div>User Profile Page</div>} />
-                            <Route path="*" element={<Navigate to="/scorecard" />} />
+                            <Route path="*" element={<Login />} />
                         </Routes>
-                    </main>
-                    {Footer && <Footer />}
+                    )}
                 </div>
             </BrowserRouter>
         </ThemeProvider>
