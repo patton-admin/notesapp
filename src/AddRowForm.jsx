@@ -42,7 +42,7 @@ const AddRowForm = ({ onSubmit }) => {
             {({ errors, touched, handleChange, handleBlur, values }) => (
                 <Form>
                     <Row className="mb-3">
-                        <Col>
+                        <Col md={6}>
                             <BootstrapForm.Group>
                                 <BootstrapForm.Label>Expected Interviews</BootstrapForm.Label>
                                 <BootstrapForm.Control
@@ -58,7 +58,7 @@ const AddRowForm = ({ onSubmit }) => {
                                 </BootstrapForm.Control.Feedback>
                             </BootstrapForm.Group>
                         </Col>
-                        <Col>
+                        <Col md={6}>
                             <BootstrapForm.Group>
                                 <BootstrapForm.Label>Achieved Interviews</BootstrapForm.Label>
                                 <BootstrapForm.Control
@@ -76,6 +76,25 @@ const AddRowForm = ({ onSubmit }) => {
                         </Col>
                     </Row>
 
+                    <Row className= "mb-3">
+                        <Col md={4}>
+                            <BootstrapForm.Group className="mb-3">
+                                <BootstrapForm.Label>Timestamp</BootstrapForm.Label>
+                                <BootstrapForm.Control
+                                    type="datetime-local"
+                                    name="timestamp"
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    value={values.timestamp}
+                                    isInvalid={touched.timestamp && !!errors.timestamp}
+                                />
+                                <BootstrapForm.Control.Feedback type="invalid">
+                                    {errors.timestamp}
+                                </BootstrapForm.Control.Feedback>
+                            </BootstrapForm.Group>
+                        </Col>
+
+                        <Col md={4}>
                     <BootstrapForm.Group className="mb-3">
                         <BootstrapForm.Label>Month</BootstrapForm.Label>
                         <BootstrapForm.Control
@@ -90,22 +109,9 @@ const AddRowForm = ({ onSubmit }) => {
                             {errors.month}
                         </BootstrapForm.Control.Feedback>
                     </BootstrapForm.Group>
+                        </Col>
 
-                    <BootstrapForm.Group className="mb-3">
-                        <BootstrapForm.Label>Timestamp</BootstrapForm.Label>
-                        <BootstrapForm.Control
-                            type="datetime-local"
-                            name="timestamp"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            value={values.timestamp}
-                            isInvalid={touched.timestamp && !!errors.timestamp}
-                        />
-                        <BootstrapForm.Control.Feedback type="invalid">
-                            {errors.timestamp}
-                        </BootstrapForm.Control.Feedback>
-                    </BootstrapForm.Group>
-
+                <Col md={4}>
                     <BootstrapForm.Group className="mb-3">
                         <BootstrapForm.Label>Year</BootstrapForm.Label>
                         <BootstrapForm.Control
@@ -115,27 +121,15 @@ const AddRowForm = ({ onSubmit }) => {
                             onBlur={handleBlur}
                             value={values.year}
                             isInvalid={touched.year && !!errors.year}
-                        />
-                        <BootstrapForm.Control.Feedback type="invalid">
+                        /><BootstrapForm.Control.Feedback type="invalid">
                             {errors.year}
                         </BootstrapForm.Control.Feedback>
                     </BootstrapForm.Group>
+                </Col>
+                    </Row>
 
-                    <BootstrapForm.Group className="mb-3">
-                        <BootstrapForm.Label>Comments</BootstrapForm.Label>
-                        <BootstrapForm.Control
-                            as="textarea"
-                            name="comments"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            value={values.comments}
-                            isInvalid={touched.comments && !!errors.comments}
-                        />
-                        <BootstrapForm.Control.Feedback type="invalid">
-                            {errors.comments}
-                        </BootstrapForm.Control.Feedback>
-                    </BootstrapForm.Group>
-
+                    <Row className="mb-3">
+                    <Col md={4}>
                     <BootstrapForm.Group className="mb-3">
                         <BootstrapForm.Label>Recruiter Name</BootstrapForm.Label>
                         <BootstrapForm.Control
@@ -150,7 +144,8 @@ const AddRowForm = ({ onSubmit }) => {
                             {errors.recruiterName}
                         </BootstrapForm.Control.Feedback>
                     </BootstrapForm.Group>
-
+                    </Col>
+                    <Col md={4}>
                     <BootstrapForm.Group className="mb-3">
                         <BootstrapForm.Label>Team</BootstrapForm.Label>
                         <BootstrapForm.Control
@@ -165,7 +160,8 @@ const AddRowForm = ({ onSubmit }) => {
                             {errors.team}
                         </BootstrapForm.Control.Feedback>
                     </BootstrapForm.Group>
-
+                    </Col>
+                    <Col md={4}>
                     <BootstrapForm.Group className="mb-3">
                         <BootstrapForm.Label>Day</BootstrapForm.Label>
                         <BootstrapForm.Control
@@ -180,7 +176,25 @@ const AddRowForm = ({ onSubmit }) => {
                             {errors.day}
                         </BootstrapForm.Control.Feedback>
                     </BootstrapForm.Group>
-
+                    </Col>
+                </Row>
+                    <Row className="mb-3">
+                        <BootstrapForm.Group className="mb-3">
+                            <BootstrapForm.Label>Comments</BootstrapForm.Label>
+                            <BootstrapForm.Control
+                                as="textarea"
+                                name="comments"
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                value={values.comments}
+                                isInvalid={touched.comments && !!errors.comments}
+                            />
+                            <BootstrapForm.Control.Feedback type="invalid">
+                                {errors.comments}
+                            </BootstrapForm.Control.Feedback>
+                        </BootstrapForm.Group>
+                    </Row>
+                    <Row className="mb-3">
                     <BootstrapForm.Group className="mb-3">
                         <BootstrapForm.Check
                             type="checkbox"
@@ -195,10 +209,12 @@ const AddRowForm = ({ onSubmit }) => {
                             {errors.lead}
                         </BootstrapForm.Control.Feedback>
                     </BootstrapForm.Group>
-
+                    </Row>
+                    <Row className="mb-3">
                     <Button type="submit" variant="primary">
                         Submit
                     </Button>
+                    </Row>
                 </Form>
             )}
         </Formik>

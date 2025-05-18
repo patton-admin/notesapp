@@ -5,6 +5,7 @@ import AddRowForm from './AddRowForm'; // Import the form component
 const AddRowModal = ({ isOpen, onSubmit, onClose }) => {
     return (
         <Modal show={isOpen} onHide={onClose} centered>
+
             <Modal.Header closeButton>
                 <Modal.Title>Add New Row</Modal.Title>
             </Modal.Header>
@@ -21,5 +22,7 @@ const AddRowModal = ({ isOpen, onSubmit, onClose }) => {
         </Modal>
     );
 };
+
+
 
 export default AddRowModal;

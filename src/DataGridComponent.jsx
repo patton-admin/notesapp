@@ -41,23 +41,28 @@ const DataGridComponent = ({recruiter}) => {
         setIsModalOpen(true);
     };
 
-    const handleFormSubmit = () => {
-        const newId = Math.max(...rows.map(row => row.id)) + 1;
-        const newRow = {
-            id: newId,
-            user_createdby: formData.user_createdby,
-            user_loginid: formData.user_loginid
-        };
-        setRows([...rows, newRow]);
-        setIsModalOpen(false);
-        setFormData({user_createdby: '', user_loginid: ''});
-    };
-
     const handleDeleteRows = () => {
         const updatedRows = rows.filter(row => !selectedRows.includes(row.id))
         setRows(updatedRows)
         setSelectedRows([])
     }
+
+    const handleFormSubmit = (request) => {
+        const newId = Math.max(...rows.map(row => row.id)) + 1;
+        const newRow = {
+            id: newId,
+            recruiterName: request.recruiterName,
+            team: request.team,
+            achievedInterviews: request.achievedInterviews,
+            expectedInterviews: request.expectedInterviews,
+            lead: request.lead,
+            comments: request.comments,
+            timestamp: new Date().toLocaleString(),
+        };
+        setRows([...rows, newRow]);
+        setIsModalOpen(false);
+        setFormData({user_createdby: '', user_loginid: ''});
+    };
 
     return (
         <ThemeProvider theme={theme}>

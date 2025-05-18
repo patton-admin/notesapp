@@ -88,7 +88,7 @@ const App = () => {
                                     <Route path="/support" element={<div>Support Page</div>} />
                                     <Route path="/help" element={<div>Help Page</div>} />
                                     <Route path="/user" element={<div>User Profile Page</div>} />
-                                    <Route path="*" element={<Navigate to="/scorecard" />} />
+                                    <Route path="*" element={<Navigate to="/" />} />
                                 </Routes>
                             </main>
                             <Footer />
