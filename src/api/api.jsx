@@ -28,13 +28,14 @@ export const getAllusers = (options) => {
     return axios(`${api}/allUsers`);
 };
 
-export const getAllCandidates = (options) => {
+export const getAllCandidates = ({recruiterName}) => {
+    console.log('recruiterName..from getAllCandidate.', recruiterName);
     const api = `https://pn6rvxfj5c.execute-api.us-east-1.amazonaws.com/dev/score/v1`;
     return axios
         .post(`${api}`, {
             type: "getRecByName",
             timePeriod: "2025",
-            recruiterName: "TEST",
+            recruiterName: recruiterName,
         })
         .then((response) => {
             const { status, data } = response;
@@ -66,7 +67,7 @@ export const deleteUserApi = (data) => {
 
 export const addScoreCard = (data) => {
     return axios
-        .post(`https://pn6rvxfj5c.execute-api.us-east-1.amazonaws.com/dev/score/v1`, data)
+        .post(`https://pn6rvxfj5c.execute-api.us-east-1.amazonaws.com/dev/score/v1`, {...data, "type": "post"})
         .then((response) => {
             console.log('response from addScoreCard...', response);
             return response;

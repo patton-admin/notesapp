@@ -20,6 +20,8 @@ const theme = createTheme({
 
 const App = () => {
     const isLoggedIn = useSelector((state) => state.login.role);
+    const user = useSelector((state) => state.login.firstName);
+    const [recruiterName, setRecruiterName] = useState(user);
     const [state, setState] = useState({
         loading: true,
         apiData: null,
@@ -33,34 +35,18 @@ const App = () => {
     };
 
     useEffect(() => {
-        const apiUrl = 'https://dssfrodna1.execute-api.us-east-1.amazonaws.com/test/v1-test';
-
-        const fetchData = async () => {
-            try {
-                const response = await fetch(apiUrl);
-                const data = await response.json();
-                setState(prev => ({...prev, apiData: data[0], loading: false}));
-            } catch (error) {
-                console.error('Error fetching data:', error);
-                setState(prev => ({...prev, loading: false}));
-            }
-        };
-
-        fetchData();
-    }, []);
-
-    useEffect(() => {
         fetchRecruitersInfo();
     }, []);
 
-    const fetchRecruitersInfo = async () => {
+    const fetchRecruitersInfo = async (user) => {
         try {
-            const getRecruitersInfo = await getAllCandidates();
+            console.log("Fetching recruiters info...", user);
+            const getRecruitersInfo = await getAllCandidates({recruiterName:user});
             if (getRecruitersInfo?.status === 200) {
                 const {data} = getRecruitersInfo.data;
                 setState(prev => ({
                     ...prev,
-                    recruiter: data.map((e, index) => ({...e, id: index + 1}))
+                    recruiter: data ? data.map((e, index) => ({...e, id: index + 1})) : []
                 }));
             }
         } catch (error) {
@@ -72,16 +58,24 @@ const App = () => {
         setState(prev => ({ ...prev, isLoggedIn: !!isLoggedIn }));
     }, [isLoggedIn]);
 
+    useEffect(() => {
+        if (user) {
+            console.log("User is available:", user);
+            fetchRecruitersInfo(user);
+            setRecruiterName(user);
+        }
+    }, [user]);
+
     return (
         <ThemeProvider theme={theme}>
             <BrowserRouter>
                 <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
                     {state.isLoggedIn ? (
                         <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-                            <Header user={state.apiData.user_loginid} handleLogout={handleLogout} />
+                            {user && <Header user={recruiterName} handleLogout={handleLogout}/>}
                             <main style={{ flex: 1, padding: '20px' }}>
                                 <Routes>
-                                    <Route path="/scorecard" element={<ScoreCardPage state={state} refresh={fetchRecruitersInfo} />} />
+                                    <Route path="/scorecard" element={<ScoreCardPage state={state} user={recruiterName} />} />
                                     <Route path="/dashboard" element={<div>Dashboard Page</div>} />
                                     <Route path="/jobOrders" element={<div>Job Orders Page</div>} />
                                     <Route path="/globalBucket" element={<div>Score Card Page</div>} />

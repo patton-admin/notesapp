@@ -122,7 +122,7 @@ const Header = ({ user, handleLogout }) => (
             >
                 <FontAwesomeIcon icon="user" />
                 <span style={{ marginLeft: "0.5rem" }}>
-                    Hi {user ? user.split("@")[0] : ""}
+                    Hi {user ? user : ""}
                 </span>
             </NavLink>
 

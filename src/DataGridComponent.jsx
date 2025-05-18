@@ -5,6 +5,7 @@ import {CircularProgress} from '@mui/material';
 
 import AddRowModal from "./AddRowModal.jsx";
 import {addScoreCard, getAllCandidates} from "./api/api.jsx";
+import {useSelector} from "react-redux";
 
 const theme = createTheme({
     typography: {
@@ -24,7 +25,7 @@ const columns = [
     {field: 'timestamp', headerName: 'Timestamp', width: 100, headerClassName: 'header-bold'},
 ];
 
-const DataGridComponent = ({recruiter}) => {
+const DataGridComponent = ({recruiter, user}) => {
     const [rows, setRows] = useState(recruiter);
     const [selectedRows, setSelectedRows] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -40,11 +41,11 @@ const DataGridComponent = ({recruiter}) => {
 
     const fetchRecruitersInfo = async () => {
         try {
-            const getRecruitersInfo = await getAllCandidates();
-            if (getRecruitersInfo?.status === 200) {
-                const {data} = getRecruitersInfo.data;
-                setRows(data);
-            }
+                const getRecruitersInfo = await getAllCandidates({recruiterName:user});
+                if (getRecruitersInfo?.status === 200) {
+                    const {data} = getRecruitersInfo.data;
+                    setRows(data.map((e, index) => ({...e, id: index + 1})));
+                }
         } catch (error) {
             console.error("Error fetching recruiters info:", error);
         }
@@ -65,7 +66,7 @@ const DataGridComponent = ({recruiter}) => {
         const newId = Math.max(...rows.map(row => row.id)) + 1;
         const newRow = {
             id: newId,
-            recruiterName: request.recruiterName,
+            recruiterName: user,
             team: request.team,
             achievedInterviews: request.achievedInterviews,
             expectedInterviews: request.expectedInterviews,
@@ -74,15 +75,14 @@ const DataGridComponent = ({recruiter}) => {
             timestamp: new Date().toLocaleString(),
             month: request.month,
             year: request.year,
-            day: request.day,
-            "type": "post",
+            day: request.day
         };
         setRows([...rows, newRow]);
         setIsModalOpen(false);
         setFormData({user_createdby: '', user_loginid: ''});
         const isAdded = await addScoreCard(newRow);
         if(isAdded && isAdded.data && isAdded.data.statusCode === 201) {
-           // await fetchRecruitersInfo();
+           await fetchRecruitersInfo();
         }
     };
 
