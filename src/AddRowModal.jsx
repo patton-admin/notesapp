@@ -7,7 +7,7 @@ const AddRowModal = ({ isOpen, onSubmit, onClose }) => {
         <Modal show={isOpen} onHide={onClose} centered>
 
             <Modal.Header closeButton>
-                <Modal.Title>Add New Row</Modal.Title>
+                <Modal.Title>Add New ScoreCard</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <Container>
