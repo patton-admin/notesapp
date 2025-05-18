@@ -33,8 +33,8 @@ export const getAllCandidates = (options) => {
     return axios
         .post(`${api}`, {
             type: "getRecByName",
-            timePeriod: "2024",
-            recruiterName: "Mark Antony",
+            timePeriod: "2025",
+            recruiterName: "TEST",
         })
         .then((response) => {
             const { status, data } = response;
@@ -57,6 +57,18 @@ export const deleteUserApi = (data) => {
     return axios
         .post(`${api}/deleteByUserId`, data)
         .then((response) => {
+            return response;
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+};
+
+export const addScoreCard = (data) => {
+    return axios
+        .post(`https://pn6rvxfj5c.execute-api.us-east-1.amazonaws.com/dev/score/v1`, data)
+        .then((response) => {
+            console.log('response from addScoreCard...', response);
             return response;
         })
         .catch(function (error) {

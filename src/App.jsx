@@ -50,23 +50,23 @@ const App = () => {
     }, []);
 
     useEffect(() => {
-        const fetchRecruitersInfo = async () => {
-            try {
-                const getRecruitersInfo = await getAllCandidates();
-                if (getRecruitersInfo?.status === 200) {
-                    const {data} = getRecruitersInfo.data;
-                    setState(prev => ({
-                        ...prev,
-                        recruiter: data.map((e, index) => ({...e, id: index + 1}))
-                    }));
-                }
-            } catch (error) {
-                console.error("Error fetching recruiters info:", error);
-            }
-        };
-
         fetchRecruitersInfo();
     }, []);
+
+    const fetchRecruitersInfo = async () => {
+        try {
+            const getRecruitersInfo = await getAllCandidates();
+            if (getRecruitersInfo?.status === 200) {
+                const {data} = getRecruitersInfo.data;
+                setState(prev => ({
+                    ...prev,
+                    recruiter: data.map((e, index) => ({...e, id: index + 1}))
+                }));
+            }
+        } catch (error) {
+            console.error("Error fetching recruiters info:", error);
+        }
+    };
 
     useEffect(() => {
         setState(prev => ({ ...prev, isLoggedIn: !!isLoggedIn }));
@@ -81,7 +81,7 @@ const App = () => {
                             <Header user={state.apiData.user_loginid} handleLogout={handleLogout} />
                             <main style={{ flex: 1, padding: '20px' }}>
                                 <Routes>
-                                    <Route path="/scorecard" element={<ScoreCardPage state={state} />} />
+                                    <Route path="/scorecard" element={<ScoreCardPage state={state} refresh={fetchRecruitersInfo} />} />
                                     <Route path="/dashboard" element={<div>Dashboard Page</div>} />
                                     <Route path="/jobOrders" element={<div>Job Orders Page</div>} />
                                     <Route path="/globalBucket" element={<div>Score Card Page</div>} />

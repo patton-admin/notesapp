@@ -5,7 +5,6 @@ import AddRowForm from './AddRowForm'; // Import the form component
 const AddRowModal = ({ isOpen, onSubmit, onClose }) => {
     return (
         <Modal show={isOpen} onHide={onClose} centered>
-
             <Modal.Header closeButton>
                 <Modal.Title>Add New ScoreCard</Modal.Title>
             </Modal.Header>

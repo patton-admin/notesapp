@@ -4,6 +4,7 @@ import {useEffect, useState} from 'react';
 import {CircularProgress} from '@mui/material';
 
 import AddRowModal from "./AddRowModal.jsx";
+import {addScoreCard, getAllCandidates} from "./api/api.jsx";
 
 const theme = createTheme({
     typography: {
@@ -37,6 +38,18 @@ const DataGridComponent = ({recruiter}) => {
         }
     }, [recruiter]);
 
+    const fetchRecruitersInfo = async () => {
+        try {
+            const getRecruitersInfo = await getAllCandidates();
+            if (getRecruitersInfo?.status === 200) {
+                const {data} = getRecruitersInfo.data;
+                setRows(data);
+            }
+        } catch (error) {
+            console.error("Error fetching recruiters info:", error);
+        }
+    };
+
     const handleAddRow = () => {
         setIsModalOpen(true);
     };
@@ -47,7 +60,8 @@ const DataGridComponent = ({recruiter}) => {
         setSelectedRows([])
     }
 
-    const handleFormSubmit = (request) => {
+    const handleFormSubmit = async (request) => {
+        console.log('Form submitted:', request);
         const newId = Math.max(...rows.map(row => row.id)) + 1;
         const newRow = {
             id: newId,
@@ -58,10 +72,18 @@ const DataGridComponent = ({recruiter}) => {
             lead: request.lead,
             comments: request.comments,
             timestamp: new Date().toLocaleString(),
+            month: request.month,
+            year: request.year,
+            day: request.day,
+            "type": "post",
         };
         setRows([...rows, newRow]);
         setIsModalOpen(false);
         setFormData({user_createdby: '', user_loginid: ''});
+        const isAdded = await addScoreCard(newRow);
+        if(isAdded && isAdded.data && isAdded.data.statusCode === 201) {
+           // await fetchRecruitersInfo();
+        }
     };
 
     return (
