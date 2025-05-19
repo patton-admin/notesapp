@@ -62,16 +62,6 @@ const Header = ({ user, handleLogout }) => (
             </NavLink>
 
             <NavLink
-                to="/dashboard"
-                style={({ isActive }) => ({
-                    color: isActive ? "#15b5ea" : "#fff",
-                    textDecoration: "none"
-                })}
-            >
-                <FontAwesomeIcon icon="home" /> Dashboard
-            </NavLink>
-
-            <NavLink
                 to="/jobOrders"
                 style={({ isActive }) => ({
                     color: isActive ? "#15b5ea" : "#fff",

@@ -32,20 +32,26 @@ const DataGridComponent = ({recruiter, user}) => {
     const [isLoading, setIsLoading] = useState(true);
     const [formData, setFormData] = useState({user_createdby: '', user_loginid: ''});
 
+    // useEffect(() => {
+    //     if (recruiter) {
+    //         setRows(recruiter);
+    //         setIsLoading(false);
+    //     }
+    // }, [recruiter]);
+
     useEffect(() => {
-        if (recruiter) {
-            setRows(recruiter);
-            setIsLoading(false);
-        }
-    }, [recruiter]);
+        fetchRecruitersInfo();
+    },[])
 
     const fetchRecruitersInfo = async () => {
         try {
+                setIsLoading(true);
                 const getRecruitersInfo = await getAllCandidates({recruiterName:user});
                 if (getRecruitersInfo?.status === 200) {
                     const {data} = getRecruitersInfo.data;
                     setRows(data.map((e, index) => ({...e, id: index + 1})));
                 }
+                setIsLoading(false)
         } catch (error) {
             console.error("Error fetching recruiters info:", error);
         }
