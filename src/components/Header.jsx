@@ -8,7 +8,8 @@ import {
     faInfo,
     faHandsHelping,
     faSignOutAlt,
-    faUser
+    faUser,
+    faChartLine
 } from "@fortawesome/free-solid-svg-icons";
 import { NavLink } from "react-router-dom";
 
@@ -78,7 +79,7 @@ const Header = ({ user, handleLogout }) => (
                     textDecoration: "none"
                 })}
             >
-                <FontAwesomeIcon icon="globe-americas" /> Score Card
+                <FontAwesomeIcon icon={faChartLine} /> Score Card
             </NavLink>
 
             <NavLink

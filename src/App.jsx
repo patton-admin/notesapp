@@ -61,7 +61,6 @@ const App = () => {
 
     useEffect(() => {
         if (user) {
-            console.log("User is available:", user);
             fetchRecruitersInfo(user);
             setRecruiterName(user);
         }
@@ -84,7 +83,7 @@ const App = () => {
                                     <Route path="/support" element={<div>Support Page</div>} />
                                     <Route path="/help" element={<div>Help Page</div>} />
                                     <Route path="/user" element={<div>User Profile Page</div>} />
-                                    <Route path="*" element={<Navigate to="/" />} />
+                                    <Route path="*" element={<Navigate to="/home" />} />
                                 </Routes>
                             </main>
                             <Footer />

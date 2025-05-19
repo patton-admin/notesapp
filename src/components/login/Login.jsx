@@ -21,7 +21,6 @@ const Login = (props) => {
 
     const submit = (data) => {
         const {username, password} = data;
-        console.log("data from submit form...", data);
         if (username) {
             props.dispatch(
                 validLogin({username: username, password: password})

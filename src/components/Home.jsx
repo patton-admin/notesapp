@@ -1,7 +1,7 @@
 
 // import Alert from "@material-ui/lab/Alert";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTachometerAlt, faFire, faChartLine, faShoppingCart } from "@fortawesome/free-solid-svg-icons";
+import { faTachometerAlt, faChartLine, faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { history } from "./../routers/AppRouters";
