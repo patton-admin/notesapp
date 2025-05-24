@@ -5,7 +5,7 @@ import './App.css';
 import Footer from "./components/Footer.jsx";
 import { getAllCandidates } from "./api/api.jsx";
 import Header from "./components/Header.jsx";
-import {ScoreCardPage} from "./ScoreCard.jsx";
+import {ScoreCardPage} from "./components/scoreCard/ScoreCard.jsx";
 import Login from "./components/login/Login.jsx";
 import {useSelector} from "react-redux";
 import {userLogout} from "./actions/login.js";
@@ -76,7 +76,7 @@ const App = () => {
                             <main style={{ flex: 1, padding: '20px' }}>
                                 <Routes>
                                     <Route path="/home" element={<Home user={user} />} />
-                                    <Route path="/scorecard" element={<ScoreCardPage state={state} user={recruiterName} />} />
+                                    <Route path="/scorecard" element={<ScoreCardPage state={state} user={recruiterName} role={isLoggedIn} />} />
                                     <Route path="/dashboard" element={<div>Dashboard Page</div>} />
                                     <Route path="/jobOrders" element={<div>Job Orders Page</div>} />
                                     <Route path="/globalBucket" element={<div>Score Card Page</div>} />

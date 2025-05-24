@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal, Container } from 'react-bootstrap';
-import AddRowForm from './AddRowForm'; // Import the form component
+import AddRowForm from './AddRowForm.jsx'; // Import the form component
 
 const AddRowModal = ({ isOpen, onSubmit, onClose }) => {
     return (
