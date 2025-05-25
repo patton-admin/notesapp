@@ -226,6 +226,17 @@ const ScoreCardDetails = ({recruiter, user, role}) => {
                             />
                         )}
                     </Box>
+                    {isModalOpen && (
+                        <div className="modal">
+                            <AddRowModal
+                                isOpen={isModalOpen}
+                                formData={formData}
+                                setFormData={setFormData}
+                                onSubmit={handleFormSubmit}
+                                onClose={() => setIsModalOpen(false)}
+                            />
+                        </div>
+                    )}
                 </Stack>
             </Box>
         </ThemeProvider>
