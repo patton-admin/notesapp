@@ -81,15 +81,30 @@ export const getAllRecruiter = () => {
     return axios
         .post(`https://pn6rvxfj5c.execute-api.us-east-1.amazonaws.com/dev/score/v1`, {"type": "getAvailableRec"})
         .then((response) => {
-            console.log('response from addScoreCard...', response);
             const { data } = response;
             const {body } = data;
-         const dropdownOptions = body.data.map(item => {
-                const [_, key] = item.split('#'); // Split once to extract the key
-                return { key, value: key };
-            });
-            console.log(dropdownOptions);
+            const dropdownOptions = body.data
+                .map(item => {
+                    const [_, key] = item.split('#'); // Split once to extract the key
+                    return { key, value: key };
+                })
+                .sort((a, b) => a.key.localeCompare(b.key)); // Sort keys alphabetically
             return dropdownOptions;
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+};
+
+export const getRecActivityByDateRange = ({recruiterName, startDate, endDate}) => {
+    return axios
+        .post(`https://pn6rvxfj5c.execute-api.us-east-1.amazonaws.com/dev/score/v1`, {
+            "type": "getRecByDateRange", recruiterName: recruiterName,
+            startDate, endDate
+        })
+        .then((response) => {
+            const {data} = response;
+            return data;
         })
         .catch(function (error) {
             console.log(error);

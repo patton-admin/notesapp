@@ -10,8 +10,7 @@ import {recruiterHeaders} from "../table/utils/recruiterHeaders.jsx";
 
 const theme = createTheme({
     typography: {
-        fontFamily: 'Garamond',
-        fontSize: 14,
+        fontFamily: 'Garamond', fontSize: 14,
     },
 });
 
@@ -24,18 +23,16 @@ const ScoreCardDetails = ({recruiter, user, role}) => {
     const [selectedRecruiter, setSelectedRecruiter] = useState(user);
     const [dropdownOptions, setDropdownOptions] = useState([]);
 
-    const columns = useMemo(() => [
-        ...recruiterHeaders
-    ], []);
+    const columns = useMemo(() => [...recruiterHeaders], []);
 
     useEffect(() => {
-        if(selectedRecruiter) {
+        if (selectedRecruiter) {
             fetchRecruitersInfo(selectedRecruiter);
         }
     }, [selectedRecruiter]);
 
     useEffect(() => {
-        if(role === 'super-admin') {
+        if (role === 'super-admin') {
             getRecruiters();
         }
     }, [])
@@ -45,30 +42,27 @@ const ScoreCardDetails = ({recruiter, user, role}) => {
             const dropdowns = await getAllRecruiter();
             console.log('dropdowns from getRecruiters...', dropdowns);
             if (dropdowns && dropdowns.length > 0) {
-             setSelectedRecruiter(dropdowns[0].key);
-             setDropdownOptions(dropdowns);
+                setSelectedRecruiter(dropdowns[0].key);
+                setDropdownOptions(dropdowns);
             }
         } catch (error) {
             console.error("Error fetching recruiters info:", error);
         }
     }
 
-    const fetchRecruitersInfo = useCallback(
-        debounce(async (recruiterName) => {
-            try {
-                setIsLoading(true);
-                const getRecruitersInfo = await getAllCandidates({ recruiterName });
-                if (getRecruitersInfo?.status === 200) {
-                    const { data } = getRecruitersInfo.data;
-                    setRows(data.map((e, index) => ({ ...e, id: index + 1 })));
-                }
-                setIsLoading(false);
-            } catch (error) {
-                console.error("Error fetching recruiters info:", error);
+    const fetchRecruitersInfo = useCallback(debounce(async (recruiterName) => {
+        try {
+            setIsLoading(true);
+            const getRecruitersInfo = await getAllCandidates({recruiterName});
+            if (getRecruitersInfo?.status === 200) {
+                const {data} = getRecruitersInfo.data;
+                setRows(data.map((e, index) => ({...e, id: index + 1})));
             }
-        }, 300),
-        []
-    );
+            setIsLoading(false);
+        } catch (error) {
+            console.error("Error fetching recruiters info:", error);
+        }
+    }, 300), []);
 
     const handleAddRow = () => {
         setIsModalOpen(true);
@@ -108,13 +102,12 @@ const ScoreCardDetails = ({recruiter, user, role}) => {
             console.error("Error adding score card:", error);
         } finally {
             setIsModalOpen(false);
-            setFormData({ user_createdby: '', user_loginid: '' });
+            setFormData({user_createdby: '', user_loginid: ''});
         }
     };
 
-    return (
-        <ThemeProvider theme={theme}>
-            <Box
+    return (<ThemeProvider theme={theme}>
+            {<Box
                 sx={{
                     height: 'calc(100vh - 200px)',
                     width: '100%',
@@ -124,9 +117,8 @@ const ScoreCardDetails = ({recruiter, user, role}) => {
                     gap: 2, // Add spacing between elements
                 }}
             >
-                <Stack spacing={2} sx={{ width: '100%' }}>
-                    {role === 'super-admin' && (
-                        <Stack
+                <Stack spacing={2} sx={{width: '100%'}}>
+                    {role === 'super-admin' && (<Stack
                             direction="row"
                             spacing={2}
                             alignItems="center"
@@ -138,9 +130,7 @@ const ScoreCardDetails = ({recruiter, user, role}) => {
                             <label
                                 htmlFor="recruiter-select"
                                 style={{
-                                    fontSize: '16px',
-                                    fontWeight: 'bold',
-                                    whiteSpace: 'nowrap', // Prevent label wrapping
+                                    fontSize: '16px', fontWeight: 'bold', whiteSpace: 'nowrap', // Prevent label wrapping
                                 }}
                             >
                                 Select Recruiter:
@@ -159,14 +149,11 @@ const ScoreCardDetails = ({recruiter, user, role}) => {
                                     minWidth: '200px', // Ensure consistent width
                                 }}
                             >
-                                {dropdownOptions.map((rec) => (
-                                    <option key={rec.key} value={rec.value}>
+                                {dropdownOptions.map((rec) => (<option key={rec.key} value={rec.value}>
                                         {rec.key}
-                                    </option>
-                                ))}
+                                    </option>))}
                             </select>
-                        </Stack>
-                    )}
+                        </Stack>)}
 
                     <Stack
                         direction="row"
@@ -180,8 +167,7 @@ const ScoreCardDetails = ({recruiter, user, role}) => {
                             variant="contained"
                             onClick={handleAddRow}
                             sx={{
-                                bgcolor: 'primary.main',
-                                textTransform: 'none', // Avoid uppercase text
+                                bgcolor: 'primary.main', textTransform: 'none', // Avoid uppercase text
                                 padding: '8px 16px',
                             }}
                         >
@@ -192,13 +178,11 @@ const ScoreCardDetails = ({recruiter, user, role}) => {
                             onClick={handleDeleteRows}
                             disabled={selectedRows.length === 0}
                             sx={{
-                                bgcolor: 'error.main',
-                                textTransform: 'none',
-                                padding: '8px 16px',
+                                bgcolor: 'error.main', textTransform: 'none', padding: '8px 16px',
                             }}
                         >
                             Delete Selected Score Card
-                        </Button>: ''}
+                        </Button> : ''}
                     </Stack>
 
                     <Box
@@ -211,10 +195,7 @@ const ScoreCardDetails = ({recruiter, user, role}) => {
                             overflow: 'auto', // Ensure table scrolls on smaller screens
                         }}
                     >
-                        {isLoading ? (
-                            <CircularProgress />
-                        ) : (
-                            <StandardDataGrid
+                        {isLoading ? (<CircularProgress/>) : (<StandardDataGrid
                                 rows={rows}
                                 columns={columns}
                                 pageSize={10}
@@ -223,11 +204,9 @@ const ScoreCardDetails = ({recruiter, user, role}) => {
                                     setSelectedRows(newSelection);
                                 }}
                                 loading={isLoading}
-                            />
-                        )}
+                            />)}
                     </Box>
-                    {isModalOpen && (
-                        <div className="modal">
+                    {isModalOpen && (<div className="modal">
                             <AddRowModal
                                 isOpen={isModalOpen}
                                 formData={formData}
@@ -235,12 +214,10 @@ const ScoreCardDetails = ({recruiter, user, role}) => {
                                 onSubmit={handleFormSubmit}
                                 onClose={() => setIsModalOpen(false)}
                             />
-                        </div>
-                    )}
+                        </div>)}
                 </Stack>
-            </Box>
-        </ThemeProvider>
-    )
+            </Box>}
+        </ThemeProvider>)
 }
 
 export default ScoreCardDetails

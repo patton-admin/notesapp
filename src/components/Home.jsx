@@ -39,10 +39,8 @@ const Home = ({ sendMsg, visibleUser, role }) => {
     if (input === "User") {
       history.push("/user");
     }
-    if (input === "Dashboard" && role === "Sadmin") {
-      history.push("/dashboard");
-    } else {
-      // setLocalMessage(true);
+    if (input === "Dashboard") {
+      navigate("/dashboard");
     }
     if (input === "Client") {
       history.push("/client");
@@ -70,7 +68,7 @@ const Home = ({ sendMsg, visibleUser, role }) => {
             <a
                 style={{ textDecoration: "none", cursor: "pointer" }}
                 onClick={() => {
-                  redirect("");
+                  redirect("Dashboard");
                 }}
             >
               <p className="tile-icon">

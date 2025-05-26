@@ -10,7 +10,6 @@ const validationSchema = Yup.object().shape({
     timestamp: Yup.date().required('Timestamp is required'),
     year: Yup.number().required('Year is required').min(2000, 'Year must be after 2000'),
     comments: Yup.string().required('Comments are required').max(500, 'Comments cannot exceed 500 characters'),
-    recruiterName: Yup.string().required('Recruiter Name is required'),
     team: Yup.string().required('Team is required'),
     day: Yup.string().required('Day is required'),
     lead: Yup.boolean().required('Lead is required'),
@@ -131,22 +130,6 @@ const AddRowForm = ({ onSubmit }) => {
                     <Row className="mb-3">
                     <Col md={4}>
                     <BootstrapForm.Group className="mb-3">
-                        <BootstrapForm.Label>Recruiter Name</BootstrapForm.Label>
-                        <BootstrapForm.Control
-                            type="text"
-                            name="recruiterName"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            value={values.recruiterName}
-                            isInvalid={touched.recruiterName && !!errors.recruiterName}
-                        />
-                        <BootstrapForm.Control.Feedback type="invalid">
-                            {errors.recruiterName}
-                        </BootstrapForm.Control.Feedback>
-                    </BootstrapForm.Group>
-                    </Col>
-                    <Col md={4}>
-                    <BootstrapForm.Group className="mb-3">
                         <BootstrapForm.Label>Team</BootstrapForm.Label>
                         <BootstrapForm.Control
                             type="text"
@@ -162,7 +145,7 @@ const AddRowForm = ({ onSubmit }) => {
                     </BootstrapForm.Group>
                     </Col>
                     <Col md={4}>
-                    <BootstrapForm.Group className="mb-3">
+                        <BootstrapForm.Group className="mb-3">
                         <BootstrapForm.Label>Day</BootstrapForm.Label>
                         <BootstrapForm.Control
                             type="text"

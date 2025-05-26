@@ -10,6 +10,7 @@ import Login from "./components/login/Login.jsx";
 import {useSelector} from "react-redux";
 import {userLogout} from "./actions/login.js";
 import Home from "./components/Home.jsx";
+import Dashboard from "./components/scoreCard/Dashboard.jsx";
 
 const theme = createTheme({
     palette: {
@@ -77,7 +78,7 @@ const App = () => {
                                 <Routes>
                                     <Route path="/home" element={<Home user={user} />} />
                                     <Route path="/scorecard" element={<ScoreCardPage state={state} user={recruiterName} role={isLoggedIn} />} />
-                                    <Route path="/dashboard" element={<div>Dashboard Page</div>} />
+                                    <Route path="/dashboard" element={<Dashboard state={state} user={recruiterName} role={isLoggedIn}/>} />
                                     <Route path="/jobOrders" element={<div>Job Orders Page</div>} />
                                     <Route path="/globalBucket" element={<div>Score Card Page</div>} />
                                     <Route path="/support" element={<div>Support Page</div>} />
