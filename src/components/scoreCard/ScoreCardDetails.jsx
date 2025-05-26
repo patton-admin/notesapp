@@ -86,9 +86,9 @@ const ScoreCardDetails = ({recruiter, user, role}) => {
             lead: request.lead,
             comments: request.comments,
             timestamp: new Date().toLocaleString(),
-            month: request.month,
+            month: String(request.month).padStart(2, '0'),
             year: request.year,
-            day: request.day,
+            day: String(request.day).padStart(2, '0'),
         };
 
         try {
