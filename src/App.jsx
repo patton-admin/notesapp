@@ -1,9 +1,20 @@
-import {ThemeProvider, createTheme, CssBaseline} from '@mui/material';
-import {useState, useEffect} from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { ThemeProvider, createTheme, CssBaseline, CircularProgress } from '@mui/material';
+import { useState, useEffect } from 'react';
 import './App.css';
-import DataGridComponent from "./DataGridComponent.jsx";
-import Footer from "./Footer.jsx";
-import {getAllCandidates} from "./api/api.jsx";
+import Footer from "./components/Footer.jsx";
+import { getAllRecruiter } from "./api/api.jsx";
+import Header from "./components/Header.jsx";
+import { ScoreCardPage } from "./components/scoreCard/ScoreCard.jsx";
+import Login from "./components/login/Login.jsx";
+import { useSelector } from "react-redux";
+import { userLogout } from "./actions/login.js";
+import Home from "./components/Home.jsx";
+import Dashboard from "./components/scoreCard/Dashboard.jsx";
+import JobOrdersPage from './components/JobOrders/jobordersPage.jsx';
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+
 
 const theme = createTheme({
     palette: {
@@ -13,68 +24,91 @@ const theme = createTheme({
     }
 });
 
-const App = () => {
+
+const App = (props) => {
+    const isLoggedIn = useSelector((state) => state.login.role);
+    const user = useSelector((state) => state.login.firstName) + "_" + useSelector((state) => state.login.lastName);
+    const [recruiterName, setRecruiterName] = useState(user);
     const [state, setState] = useState({
         loading: true,
         apiData: null,
-        recruiter: []
+        recruiter: [],
+        isLoggedIn: true,
     });
 
-    useEffect(() => {
-        const apiUrl = 'https://dssfrodna1.execute-api.us-east-1.amazonaws.com/test/v1-test';
-
-        const fetchData = async () => {
-            try {
-                const response = await fetch(apiUrl);
-                const data = await response.json();
-                setState(prev => ({...prev, apiData: data[0], loading: false}));
-            } catch (error) {
-                console.error('Error fetching data:', error);
-                setState(prev => ({...prev, loading: false}));
-            }
-        };
-
-        fetchData();
-    }, []);
+    const dispatch = useDispatch();
+    // const navigate = useNavigate();
+    const handleLogout = () => {
+        dispatch(userLogout());
+        // localStorage.removeItem("token");
+        console.log('Logging out...')
+        // navigate("/");
+    };
 
     useEffect(() => {
-        const fetchRecruitersInfo = async () => {
-            try {
-                const getRecruitersInfo = await getAllCandidates();
-                if (getRecruitersInfo?.status === 200) {
-                    const {data} = getRecruitersInfo.data;
-                    setState(prev => ({
-                        ...prev,
-                        recruiter: data.map((e, index) => ({...e, id: index + 1}))
-                    }));
-                }
-            } catch (error) {
-                console.error("Error fetching recruiters info:", error);
-            }
-        };
-
         fetchRecruitersInfo();
     }, []);
 
+    const fetchRecruitersInfo = async (user) => {
+        try {
+            console.log("Fetching recruiters info...", user);
+            const getRecruitersInfo = await getAllRecruiter({ recruiterName: user });
+            if (getRecruitersInfo?.status === 200) {
+                const { data } = getRecruitersInfo.data;
+                setState(prev => ({
+                    ...prev,
+                    recruiter: data ? data.map((e, index) => ({ ...e, id: index + 1 })) : []
+                }));
+            }
+        } catch (error) {
+            console.error("Error fetching recruiters info:", error);
+        }
+    };
+
+    useEffect(() => {
+        setState(prev => ({ ...prev, isLoggedIn: !!isLoggedIn }));
+    }, [isLoggedIn]);
+
+    useEffect(() => {
+        if (user) {
+            fetchRecruitersInfo(user);
+            setRecruiterName(user);
+        }
+    }, [user]);
+
     return (
         <ThemeProvider theme={theme}>
-            <div className="api-data">
-                {state.loading ? (
-                    <p>Loading...</p>
-                ) : state.apiData ? (
-                    <div style={{backgroundColor: '#1565c0'}}>
-                        <h2>Patton Score Card</h2>
-                        <p><strong>UserId:</strong> {state.apiData.user_createdby}</p>
-                        <p><strong>Email:</strong> {state.apiData.user_loginid}</p>
-                    </div>
-                ) : (
-                    <p>Error loading data.</p>
-                )}
-                {state.recruiter.length > 0 && <DataGridComponent recruiter={state.recruiter}/>}
-                {/*<Footer/>*/}
-            </div>
-        </ThemeProvider>
+            <BrowserRouter>
+                <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+                    {state.isLoggedIn ? (
+                        <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+                            {user && <Header user={recruiterName} role={isLoggedIn} handleLogout={handleLogout} />}
+                            <main style={{ flex: 1, padding: '20px' }}>
+                                <Routes>
+                                    <Route path="/home" element={<Home user={user} role={isLoggedIn} />} />
+                                    <Route path="/scorecard" element={<ScoreCardPage state={state} user={recruiterName} role={isLoggedIn} />} />
+                                    <Route path="/dashboard" element={<Dashboard state={state} user={recruiterName} role={isLoggedIn} />} />
+                                    <Route path="/jobOrders" element={<JobOrdersPage state={state} user={recruiterName} role={isLoggedIn} />} />
+                                    <Route path="/globalBucket" element={<div>Score Card Page</div>} />
+                                    <Route path="/support" element={<div>Support Page</div>} />
+                                    <Route path="/help" element={<div>Help Page</div>} />
+                                    <Route path="/user" element={<div>User Profile Page</div>} />
+                                    <Route path="*" element={<Navigate to="/home" />} />
+                                </Routes>
+                            </main>
+                            <Footer />
+                        </div>
+                    ) : (
+                        <Routes>
+                            <Route path="*" element={<Login />} />
+                        </Routes>
+                    )}
+                </div>
+            </BrowserRouter>
+        </ThemeProvider >
     );
+
 }
 
-export default App
+
+export default App;
